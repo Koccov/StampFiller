@@ -1,0 +1,81 @@
+﻿<Window x:Class="StampFiller.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:StampFiller"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="400"
+        ResizeMode="NoResize">
+    <DockPanel Margin="5">
+        <StackPanel DockPanel.Dock="Top">
+            <Grid Margin="0,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Account number:"/>
+                <TextBox Text="{Binding AccountNumber}" 
+                         Margin="5,0" Grid.Column="1"/>
+            </Grid>
+            <Grid Margin="0,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Order number:"/>
+                <TextBox Text="{Binding OrderNumber}" 
+                         Margin="5,0" Grid.Column="2"/>
+            </Grid>
+            <Grid Margin="0,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Invoice number:"/>
+                <TextBox Text="{Binding InvoiceNumber}"
+                         Margin="5,0" Grid.Column="2"/>
+            </Grid>
+            <Grid Margin="0,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Due date:"/>
+                <TextBox Text="{Binding DueDate}"
+                         Margin="5,0" Grid.Column="2"/>
+            </Grid>
+            <Grid Margin="0,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Shipment (optional):"/>
+                <TextBox Text="{Binding ShipmentNumber}"
+                         Margin="5,0" Grid.Column="2"/>
+            </Grid>
+            <Grid Margin="0,2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Approved by:"/>
+                <TextBox Text="{Binding ApprovedBy}"
+                         Margin="5,0" Grid.Column="2"/>
+            </Grid>
+            <Button Content="Import stamp template" Click="ImportButton" Margin="5,2"/>
+            <Button Content="Refresh stamp" Click="RefreshStamp" Margin="5,2"/>
+            
+        </StackPanel>
+        <Grid DockPanel.Dock="Bottom">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Content="Copy to clipboard" Click="CopyImageToClipboard" Margin="2"/>
+            <Button Content="Save to file" Click="SaveToFile" Margin="2" Grid.Column="1"/>
+        </Grid>
+        
+        <Image Source="{Binding FilledStamp}" Margin="5"/>
+    </DockPanel>
+</Window>
