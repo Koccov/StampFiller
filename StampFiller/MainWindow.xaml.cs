@@ -213,7 +213,14 @@ namespace StampFiller
 
 		private void CopyImageToClipboard(object sender, RoutedEventArgs e)
 		{
-			Clipboard.SetImage(FilledStamp);
+			if (FilledStamp != null)
+			{
+				Clipboard.SetImage(FilledStamp);
+			}
+			else
+			{
+				MessageBox.Show("No picture to copy!", MessageBoxImage.Error.ToString(), MessageBoxButton.OK, MessageBoxImage.Error);
+			}
 		}
 
 		private void RefreshStamp(object sender, RoutedEventArgs e)
