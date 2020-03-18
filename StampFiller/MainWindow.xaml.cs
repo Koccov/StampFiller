@@ -32,7 +32,7 @@ namespace StampFiller
 			StampTemplate = GetStampTemplate(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @"Pos Service Holland B.V\Purchase - Documenten\General\Patryk\stamp.png"));
 			if (StampTemplate == null)
 			{
-				MessageBox.Show("No stamp.png template found!\nImport manually");
+				MessageBox.Show("No stamp.png template found!\nImport manually by clicking \"Import stamp template\"");
 			}
 		}
 
