@@ -223,6 +223,15 @@ namespace StampFiller
 			}
 		}
 
+		private void ClearStamp(object sender, RoutedEventArgs e)
+		{
+			AccountNumber = "";
+			OrderNumber = "";
+			InvoiceNumber = "";
+			DueDate = "";
+			ShipmentNumber = "";
+		}
+
 		private void RefreshStamp(object sender, RoutedEventArgs e)
 		{
 			var tempStamp = GetFilledStamp();
@@ -232,13 +241,13 @@ namespace StampFiller
 			}
 		}
 
-		private void SaveToFile(object sender, RoutedEventArgs e)
-		{
-		}
-
 		private void ImportButton(object sender, RoutedEventArgs e)
 		{
 			ImportStampTemplate();
 		}
+
+		//private void SaveToFile(object sender, RoutedEventArgs e)
+		//{
+		//}
 	}
 }

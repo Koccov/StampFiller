@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StampFiller"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="400"
+        Title="MainWindow" Height="500" Width="400"
         ResizeMode="NoResize">
     <DockPanel Margin="5">
         <StackPanel DockPanel.Dock="Top">
@@ -63,6 +63,7 @@
                 <TextBox Text="{Binding ApprovedBy}"
                          Margin="5,0" Grid.Column="2"/>
             </Grid>
+            <Button Content="Clear stamp" Click="ClearStamp" Margin="5,2"/>
             <Button Content="Import stamp template" Click="ImportButton" Margin="5,2"/>
             <Button Content="Refresh stamp" Click="RefreshStamp" Margin="5,2"/>
             
