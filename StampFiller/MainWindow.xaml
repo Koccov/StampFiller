@@ -72,8 +72,8 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <Button Content="Copy to clipboard" Click="CopyImageToClipboard" Margin="2"/>
-            <Button Content="Save to file" Click="SaveToFile" Margin="2" Grid.Column="1"/>
+            <Button Content="Copy to clipboard" Click="CopyImageToClipboard" Margin="2" Grid.ColumnSpan="2"/>
+            <!--<Button Content="Save to file" Click="SaveToFile" Margin="2" Grid.Column="1"/>-->
         </Grid>
         
         <Image Source="{Binding FilledStamp}" Margin="5"/>
