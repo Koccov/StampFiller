@@ -52,7 +52,7 @@ namespace StampFiller
 					LineAlignment = StringAlignment.Near
 				};
 
-				g.DrawString(texts[i], new Font("Tahoma", 48), Brushes.Black, rectangle, format);
+				g.DrawString(texts[i], new Font("Segoe UI", 48), Brushes.Black, rectangle, format);
 			}
 
 			g.Flush();
