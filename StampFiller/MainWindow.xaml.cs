@@ -18,20 +18,22 @@ namespace StampFiller
 			InitializeComponent();
 			DataContext = this;
 			//StampTemplate = GetStampTemplate(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @"Pos Service Holland B.V\Purchase - Documenten\General\Patryk\stamp.png"));
+			AccountNumber = "TestTest";
 		}
 
-		private BitmapImage GetFilledStamp()
+		private TransformedBitmap GetFilledStamp()
 		{
 			Bitmap Template = Properties.Resources.stamp;
 			//Template.MakeTransparent(Color.White);
 			WriteText(Template);
 
-			var FinalImage = BitmapToBitmapImage(Template);
+			var InitialImage = BitmapToBitmapImage(Template);
 
+			var FinalImage = new TransformedBitmap(InitialImage, new System.Windows.Media.ScaleTransform(0.3, 0.3));
 			return FinalImage;
 		}
 
-		private static void WriteText(Bitmap Template)
+		private void WriteText(Bitmap Template)
 		{
 			Graphics g = Graphics.FromImage(Template);
 			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
@@ -39,31 +41,21 @@ namespace StampFiller
 			g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
 			g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
 
-			int width = 140;
-			int[] heights = { 35, 72, 108, 145, 180, 217 };
+			int x = 405;
+			int[] y = { 120, 230, 345, 455, 565, 680 };
+			string[] texts = { AccountNumber, OrderNumber, InvoiceNumber, DueDate, ApprovedBy, ShipmentNumber };
 
-			//for (int i = 0; i < 5; i++)
-			//{
-			//	RectangleF rectangle = new RectangleF(new PointF(width, heights[i]), new System.Drawing.Size(50, 50));
-			//	//System.Drawing.RectangleF rectangle = new System.Drawing.RectangleF(width, heights[i], Template.Width - width, Template.Height - heights[i]);
-			//	StringFormat format = new StringFormat()
-			//	{
-			//		Alignment = StringAlignment.Center,
-			//		LineAlignment = StringAlignment.Near
-			//	};
-
-			//	g.DrawString("Test", new Font("Tahoma", 8), Brushes.Black, rectangle, format);
-			//}
-
-			RectangleF rectangle = new RectangleF(new PointF(200, 200), new System.Drawing.Size(500, 500));
-			//System.Drawing.RectangleF rectangle = new System.Drawing.RectangleF(width, heights[i], Template.Width - width, Template.Height - heights[i]);
-			StringFormat format = new StringFormat()
+			for (int i = 0; i < y.Length; i++)
 			{
-				Alignment = StringAlignment.Center,
-				LineAlignment = StringAlignment.Near
-			};
+				RectangleF rectangle = new RectangleF(new PointF(x, y[i]), new System.Drawing.Size(900, 100));
+				StringFormat format = new StringFormat()
+				{
+					Alignment = StringAlignment.Near,
+					LineAlignment = StringAlignment.Near
+				};
 
-			g.DrawString("Test", new Font("Tahoma", 64), Brushes.Black, rectangle, format);
+				g.DrawString(texts[i], new Font("Tahoma", 48), Brushes.Black, rectangle, format);
+			}
 
 			g.Flush();
 		}
@@ -95,8 +87,8 @@ namespace StampFiller
 		//	return new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface("Segoe UI"), 26, Brushes.Black);
 		//}
 
-		private BitmapImage filledStamp;
-		public BitmapImage FilledStamp
+		private TransformedBitmap filledStamp;
+		public TransformedBitmap FilledStamp
 		{
 			get { return filledStamp; }
 			set
