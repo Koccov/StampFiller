@@ -1,22 +1,10 @@
-﻿using Microsoft.Win32;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Globalization;
+﻿using System.ComponentModel;
+using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace StampFiller
 {
@@ -29,86 +17,86 @@ namespace StampFiller
 		{
 			InitializeComponent();
 			DataContext = this;
-			StampTemplate = GetStampTemplate(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @"Pos Service Holland B.V\Purchase - Documenten\General\Patryk\stamp.png"));
-			if (StampTemplate == null)
-			{
-				MessageBox.Show("No stamp.png template found!\nImport manually by clicking \"Import stamp template\"");
-			}
+			//StampTemplate = GetStampTemplate(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @"Pos Service Holland B.V\Purchase - Documenten\General\Patryk\stamp.png"));
 		}
 
-		private void ImportStampTemplate()
+		private BitmapImage GetFilledStamp()
 		{
-			OpenFileDialog openFileDialog = new OpenFileDialog();
-			openFileDialog.Filter = "*.png|*.png";
-			if (openFileDialog.ShowDialog() == true)
-			{
-				StampTemplate = GetStampTemplate(openFileDialog.FileName);
-			}
+			Bitmap Template = Properties.Resources.stamp;
+			//Template.MakeTransparent(Color.White);
+			WriteText(Template);
+
+			var FinalImage = BitmapToBitmapImage(Template);
+
+			return FinalImage;
 		}
 
-		private BitmapImage GetStampTemplate(string FilePath)
+		private static void WriteText(Bitmap Template)
 		{
-			if (File.Exists(FilePath))
+			Graphics g = Graphics.FromImage(Template);
+			g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+			g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+			g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+			g.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAliasGridFit;
+
+			int width = 140;
+			int[] heights = { 35, 72, 108, 145, 180, 217 };
+
+			//for (int i = 0; i < 5; i++)
+			//{
+			//	RectangleF rectangle = new RectangleF(new PointF(width, heights[i]), new System.Drawing.Size(50, 50));
+			//	//System.Drawing.RectangleF rectangle = new System.Drawing.RectangleF(width, heights[i], Template.Width - width, Template.Height - heights[i]);
+			//	StringFormat format = new StringFormat()
+			//	{
+			//		Alignment = StringAlignment.Center,
+			//		LineAlignment = StringAlignment.Near
+			//	};
+
+			//	g.DrawString("Test", new Font("Tahoma", 8), Brushes.Black, rectangle, format);
+			//}
+
+			RectangleF rectangle = new RectangleF(new PointF(200, 200), new System.Drawing.Size(500, 500));
+			//System.Drawing.RectangleF rectangle = new System.Drawing.RectangleF(width, heights[i], Template.Width - width, Template.Height - heights[i]);
+			StringFormat format = new StringFormat()
 			{
-				using (var stream = new FileStream(FilePath, FileMode.Open))
-				{
-					var image = new BitmapImage();
-					image.BeginInit();
-					image.CacheOption = BitmapCacheOption.OnLoad;
-					image.StreamSource = stream;
-					image.EndInit();
-					image.Freeze();
-					return image;
-				}
-			}
-			else return null;
+				Alignment = StringAlignment.Center,
+				LineAlignment = StringAlignment.Near
+			};
+
+			g.DrawString("Test", new Font("Tahoma", 64), Brushes.Black, rectangle, format);
+
+			g.Flush();
 		}
 
-		private RenderTargetBitmap GetFilledStamp()
+		private static BitmapImage BitmapToBitmapImage(Bitmap bitmap)
 		{
-			var visual = new DrawingVisual();
-			using (DrawingContext drawingContext = visual.RenderOpen())
+			using (var memory = new MemoryStream())
 			{
-				drawingContext.DrawImage(stampTemplate, new Rect(0, 0, 412, 256));
-				drawingContext.DrawText(GetFormattedText(AccountNumber), new Point(140, 35));
-				drawingContext.DrawText(GetFormattedText(OrderNumber), new Point(140, 72));
-				drawingContext.DrawText(GetFormattedText(InvoiceNumber), new Point(140, 108));
-				drawingContext.DrawText(GetFormattedText(DueDate), new Point(140, 145));
-				drawingContext.DrawText(GetFormattedText(ApprovedBy), new Point(140, 180));
-				drawingContext.DrawText(GetFormattedText(ShipmentNumber), new Point(140, 217));
-			}
-			RenderTargetBitmap bitmap = new RenderTargetBitmap(412, 256, 96, 96, PixelFormats.Pbgra32);
-			bitmap.Render(visual);
+				bitmap.Save(memory, System.Drawing.Imaging.ImageFormat.Png);
+				memory.Position = 0;
 
+				var bitmapImage = new BitmapImage();
+				bitmapImage.BeginInit();
+				bitmapImage.StreamSource = memory;
+				bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+				bitmapImage.EndInit();
+				bitmapImage.Freeze();
 
-			return bitmap;
-		}
-
-		private FormattedText GetFormattedText(string text)
-		{
-			if (text == null)
-			{
-				text = "";
-			}
-			return new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface("Segoe UI"), 26, Brushes.Black);
-		}
-
-		private BitmapImage stampTemplate;
-		public BitmapImage StampTemplate
-		{
-			get { return stampTemplate; }
-			set
-			{
-				if (stampTemplate != value)
-				{
-					stampTemplate = value;
-					OnPropertyChanged();
-				}
+				return bitmapImage;
 			}
 		}
 
-		private RenderTargetBitmap filledStamp;
-		public RenderTargetBitmap FilledStamp
+		//private FormattedText GetFormattedText(string text)
+		//{
+		//	if (text == null)
+		//	{
+		//		text = "";
+		//	}
+		//	return new FormattedText(text, CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface("Segoe UI"), 26, Brushes.Black);
+		//}
+
+		private BitmapImage filledStamp;
+		public BitmapImage FilledStamp
 		{
 			get { return filledStamp; }
 			set
@@ -237,13 +225,8 @@ namespace StampFiller
 			var tempStamp = GetFilledStamp();
 			if (tempStamp != null)
 			{
-				FilledStamp = GetFilledStamp();
+				FilledStamp = tempStamp;
 			}
-		}
-
-		private void ImportButton(object sender, RoutedEventArgs e)
-		{
-			ImportStampTemplate();
 		}
 
 		//private void SaveToFile(object sender, RoutedEventArgs e)
