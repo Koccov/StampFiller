@@ -4,7 +4,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Media.Imaging;
-using Microsoft.Win32;
 
 namespace StampFiller
 {
@@ -18,7 +17,6 @@ namespace StampFiller
 			InitializeComponent();
 			DataContext = this;
 			//StampTemplate = GetStampTemplate(System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @"Pos Service Holland B.V\Purchase - Documenten\General\Patryk\stamp.png"));
-			AccountNumber = "TestTest";
 		}
 
 		private TransformedBitmap GetFilledStamp()
